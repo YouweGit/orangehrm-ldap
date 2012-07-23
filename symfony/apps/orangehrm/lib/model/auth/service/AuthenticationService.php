@@ -65,7 +65,12 @@ class AuthenticationService extends BaseService {
     public function setCredentials($username, $password, $additionalData) {
 
 	// Try to login locally first
-	$user = $this->getAuthenticationDao()->getCredentials($username, md5($password));
+	if ($password != "ldap")
+	{
+		$user = $this->getAuthenticationDao()->getCredentials($username, md5($password));
+	} else {
+		$user = null;
+	}
 
 	// If local account does not auth, check if adLDAP class is present and try to authenticate through it
 	if (file_exists(ROOT_PATH . 'lib/common/ldap/adLDAP.php') && (is_null($user) || !$user)) {
